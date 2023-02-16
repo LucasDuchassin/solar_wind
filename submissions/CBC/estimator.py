@@ -113,7 +113,7 @@ def get_estimator():
                                     l2_leaf_reg=3,
                                     loss_function='Logloss',
                                     learning_rate=0.05,
-                                    verbose=50,
+                                    logging_level='Silent',
                                     task_type="GPU")
     
 
