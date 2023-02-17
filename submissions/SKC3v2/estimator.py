@@ -1,7 +1,9 @@
 from sklearn.base import BaseEstimator
 from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import StandardScaler, MinMaxScaler, RobustScaler
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
 from sklearn.linear_model import LogisticRegression
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+from sklearn.ensemble import GradientBoostingClassifier, VotingClassifier, RandomForestClassifier
 import pandas as pd
 
 
@@ -95,23 +97,28 @@ class FeatureExtractor(BaseEstimator):
 class CustomClf(BaseEstimator):
     def __init__(self):
         self._estimator_type = "classifier"
-        self.estimator = LogisticRegression(max_iter=5000,
-                                            class_weight={0:1, 1:1.8},
-                                            n_jobs=1,
-                                            tol=0.005,
-                                            penalty='l2',
-                                            C=1,
-                                            solver='liblinear')
+        self.estimator = VotingClassifier(
+            [
+            ('LR', LogisticRegression(max_iter=5000,
+                                    class_weight={0:1, 1:1.8},
+                                    n_jobs=1,
+                                    tol=0.005,
+                                    penalty='l2',
+                                    C=1,
+                                    solver='liblinear')),
+            ('LR2', LogisticRegression(max_iter=5000))
+            ],
+            voting='soft',
+            n_jobs=-1
+        )
+    
 
     def fit(self, X, y):
         return self.estimator.fit(X, y=y)
     
-    def predict(self, X):
-        return self.estimator.predict(X)
-    
     def predict_proba(self, X):
         y = self.estimator.predict_proba(X)
-        y = smoothingroll(y, 18)
+        y = smoothingroll(y, 24)
         return y
     
     def classes_(self):
