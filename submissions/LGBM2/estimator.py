@@ -246,7 +246,7 @@ class CustomClf(BaseEstimator):
     
     def predict_proba(self, X):
         y = self.estimator.predict_proba(X)
-        y = smoothingroll2(y, 30)
+        y = smoothingroll(y, 30)
         return y
     
     def classes_(self):
