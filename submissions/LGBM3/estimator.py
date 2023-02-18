@@ -4,6 +4,8 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
 import pandas as pd
 from lightgbm import LGBMClassifier
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+from sklearn.ensemble import GradientBoostingClassifier, VotingClassifier, RandomForestClassifier
 import numpy as np
 
 
@@ -92,6 +94,13 @@ def clip_column(X_df, column, min, max):
     X_df[column] = X_df[column].clip(min, max)
     return X_df
 
+def compute_rolling_diff(X, feat, periods):
+    name = "_".join([feat, str(periods)])
+    X[name] = X[feat].pct_change(periods=periods)
+    X[name] = X[name].ffill().bfill()
+    X[name] = X[name].astype(X[feat].dtype)
+    return X
+
 def smoothing(y, factor):
     i=0
     factor = factor
@@ -135,9 +144,7 @@ def smoothingroll(y, factor):
 def smoothingroll2(y, factor):
     kernel = np.ones(factor)/factor
     kernel = [1, 2, 3, 4, 5, 6, 5, 4, 3, 2, 1]
-
-    kernel = 5*[1] + 5*[3] + 5*[5] + 5*[3] + 5*[1]
-    kernel = (kernel/np.sum(kernel))
+    kernel = (kernel/np.sum(kernel))*1.2
     y[:,0] = np.convolve(y[:,0], kernel, 'same')
     y[:,1] = np.convolve(y[:,1], kernel, 'same')
     return y
@@ -220,6 +227,20 @@ class FeatureExtractor(BaseEstimator):
         X = compute_rolling_median(X, "B", "12h", False)
         X = compute_rolling_median(X, "Beta", "12h", True)
         X = compute_rolling_median(X, "Beta", "12h", False)
+
+        X = compute_rolling_diff(X, 'B_12h_median_True', 48)
+        X = compute_rolling_diff(X, 'Beta_12h_median_True', 48)
+        X = compute_rolling_diff(X, 'RmsBob_12h_median_True', 48)
+        X = compute_rolling_diff(X, 'Beta_1h_mean_True', 24)
+        X = compute_rolling_diff(X, 'Beta_1h_mean_True', -24)
+        X = compute_rolling_diff(X, 'Beta_1h_mean_True', 48)
+        X = compute_rolling_diff(X, 'Beta_1h_mean_True', -48)
+        X = compute_rolling_diff(X, 'Beta_1h_mean_True', 96)
+        X = compute_rolling_diff(X, 'Beta_1h_mean_True', -96)
+        X = compute_rolling_diff(X, 'B_24h_std_True', 48)
+        X = compute_rolling_diff(X, 'B_24h_std_True', -48)
+        X = compute_rolling_diff(X, 'B_24h_std_True', 92)
+        X = compute_rolling_diff(X, 'B_24h_std_True', -92)
         return X
     
 class CustomClf(BaseEstimator):
@@ -231,8 +252,8 @@ class CustomClf(BaseEstimator):
                                 max_depth=15,
                                 learning_rate=0.02,
                                 n_estimators=400,
-                                class_weight={0:1, 1:2},
-                                reg_lambda=10,
+                                class_weight={0:1, 1:1.5},
+                                reg_lambda=1,
                                 )
         
 
