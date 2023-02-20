@@ -122,7 +122,7 @@ class PointwiseLogLoss(BaseScoreType):
     minimum = 0.0
     maximum = np.inf
 
-    def __init__(self, name="pw_ll", precision=2):
+    def __init__(self, name="pw_ll", precision=3):
         self.name = name
         self.precision = precision
 
@@ -136,7 +136,7 @@ class PointwisePrecision(ClassifierBaseScoreType):
     minimum = 0.0
     maximum = 1.0
 
-    def __init__(self, name="pw_prec", precision=2):
+    def __init__(self, name="pw_prec", precision=3):
         self.name = name
         self.precision = precision
 
@@ -150,7 +150,7 @@ class PointwiseRecall(ClassifierBaseScoreType):
     minimum = 0.0
     maximum = 1.0
 
-    def __init__(self, name="pw_rec", precision=2):
+    def __init__(self, name="pw_rec", precision=3):
         self.name = name
         self.precision = precision
 
@@ -165,7 +165,7 @@ class EventwisePrecision(BaseScoreType):
     minimum = 0.0
     maximum = 1.0
 
-    def __init__(self, name="ev_prec", precision=2):
+    def __init__(self, name="ev_prec", precision=3):
         self.name = name
         self.precision = precision
 
@@ -196,7 +196,7 @@ class EventwiseRecall(BaseScoreType):
     minimum = 0.0
     maximum = 1.0
 
-    def __init__(self, name="ev_rec", precision=2):
+    def __init__(self, name="ev_rec", precision=3):
         self.name = name
         self.precision = precision
 
@@ -225,7 +225,7 @@ class EventwiseF1(BaseScoreType):
     minimum = 0.0
     maximum = 1.0
 
-    def __init__(self, name="ev_F1", precision=2):
+    def __init__(self, name="ev_F1", precision=3):
         self.name = name
         self.precision = precision
         self.eventwise_recall = EventwiseRecall()
@@ -242,7 +242,7 @@ class Mixed(BaseScoreType):
     minimum = 0.0
     maximum = np.inf
 
-    def __init__(self, name="mixed", precision=2):
+    def __init__(self, name="mixed", precision=3):
         self.name = name
         self.precision = precision
         self.event_wise_f1 = EventwiseF1()
