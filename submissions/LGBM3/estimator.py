@@ -184,6 +184,8 @@ class FeatureExtractor(BaseEstimator):
         X = compute_rolling_mean(X, "Beta", "2h", True)
 
         X = compute_rolling_mean(X, "Beta", "1h", True)
+        X = compute_rolling_mean(X, "B", "1h", True)
+        X = compute_rolling_mean(X, "RmsBob", "1h", True)
 
         X = compute_rolling_mean(X, "RmsBob", "6h", True)
 
@@ -231,16 +233,38 @@ class FeatureExtractor(BaseEstimator):
         X = compute_rolling_diff(X, 'B_12h_median_True', 48)
         X = compute_rolling_diff(X, 'Beta_12h_median_True', 48)
         X = compute_rolling_diff(X, 'RmsBob_12h_median_True', 48)
+
         X = compute_rolling_diff(X, 'Beta_1h_mean_True', 24)
         X = compute_rolling_diff(X, 'Beta_1h_mean_True', -24)
         X = compute_rolling_diff(X, 'Beta_1h_mean_True', 48)
         X = compute_rolling_diff(X, 'Beta_1h_mean_True', -48)
         X = compute_rolling_diff(X, 'Beta_1h_mean_True', 96)
         X = compute_rolling_diff(X, 'Beta_1h_mean_True', -96)
+        X = compute_rolling_diff(X, 'Beta_1h_mean_True', 192)
+        X = compute_rolling_diff(X, 'Beta_1h_mean_True', -192)
+
+        X = compute_rolling_diff(X, 'B_1h_mean_True', 24)
+        X = compute_rolling_diff(X, 'B_1h_mean_True', -24)
+        X = compute_rolling_diff(X, 'B_1h_mean_True', 48)
+        X = compute_rolling_diff(X, 'B_1h_mean_True', -48)
+        X = compute_rolling_diff(X, 'B_1h_mean_True', 96)
+        X = compute_rolling_diff(X, 'B_1h_mean_True', -96)
+        X = compute_rolling_diff(X, 'B_1h_mean_True', 192)
+        X = compute_rolling_diff(X, 'B_1h_mean_True', -192)
+
+        X = compute_rolling_diff(X, 'RmsBob_1h_mean_True', 24)
+        X = compute_rolling_diff(X, 'RmsBob_1h_mean_True', -24)
+        X = compute_rolling_diff(X, 'RmsBob_1h_mean_True', 48)
+        X = compute_rolling_diff(X, 'RmsBob_1h_mean_True', -48)
+        X = compute_rolling_diff(X, 'RmsBob_1h_mean_True', 96)
+        X = compute_rolling_diff(X, 'RmsBob_1h_mean_True', -96)
+        X = compute_rolling_diff(X, 'RmsBob_1h_mean_True', 192)
+        X = compute_rolling_diff(X, 'RmsBob_1h_mean_True', -192)
+
         X = compute_rolling_diff(X, 'B_24h_std_True', 48)
         X = compute_rolling_diff(X, 'B_24h_std_True', -48)
-        X = compute_rolling_diff(X, 'B_24h_std_True', 92)
-        X = compute_rolling_diff(X, 'B_24h_std_True', -92)
+        X = compute_rolling_diff(X, 'B_24h_std_True', 96)
+        X = compute_rolling_diff(X, 'B_24h_std_True', -96)
         return X
     
 class CustomClf(BaseEstimator):
@@ -252,7 +276,7 @@ class CustomClf(BaseEstimator):
                                 max_depth=15,
                                 learning_rate=0.02,
                                 n_estimators=400,
-                                class_weight={0:1, 1:1.5},
+                                class_weight={0:1, 1:2},
                                 reg_lambda=1,
                                 )
         
@@ -267,6 +291,10 @@ class CustomClf(BaseEstimator):
     
     def predict_proba(self, X):
         y = self.estimator.predict_proba(X)
+        # y[0] = y[0].clip(0.05, 0.95)
+        # y[1] = y[1].clip(0.05, 0.95)
+        y[1] = y[1]**2
+        # y[0] = np.sqrt(y[0])
         y = smoothingroll2(y, 30)
         return y
     
