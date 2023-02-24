@@ -133,8 +133,13 @@ class FeatureExtractor(BaseEstimator):
                 "RmsBob",
                 "Vx",
                 "Vth",
-                "V"]
+                "V",
+                "Pdyn"]
         X = X.drop(columns=[col for col in X if col not in Cols])
+
+        X = compute_rolling_median(X, "Pdyn", "6h", True)
+        X = compute_rolling_median(X, "Pdyn", "12h", True)
+        X = compute_rolling_median(X, "Pdyn", "24h", True)
  
         X = compute_rolling_std(X, "B", "24h", True)
         X = compute_rolling_std(X, "B", "24h", False)
@@ -318,8 +323,8 @@ class CustomClf(BaseEstimator):
                                 min_split_gain=0.,
                                 max_depth=15,
                                 learning_rate=0.02,
-                                n_estimators=550,
-                                class_weight={0:1, 1:2},
+                                n_estimators=500,
+                                class_weight={0:1, 1:1.8},
                                 reg_lambda=0.5,
                                 ))
             ],
