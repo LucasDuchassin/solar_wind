@@ -136,11 +136,11 @@ class FeatureExtractor(BaseEstimator):
         X = compute_rolling_max(X, 'V', '6h', False)
         X = compute_rolling_max(X, 'Pdyn', '6h', False)
 
-        # X = compute_rolling_skew(X, 'Beta', '6h', True)
-        # X = compute_rolling_skew(X, 'B', '6h', True)
-        # X = compute_rolling_skew(X, 'RmsBob', '6h', True)
-        # X = compute_rolling_skew(X, 'V', '6h', True)
-        # X = compute_rolling_skew(X, 'Pdyn', '6h', True)
+        X = compute_rolling_skew(X, 'Beta', '6h', True)
+        X = compute_rolling_skew(X, 'B', '6h', True)
+        X = compute_rolling_skew(X, 'RmsBob', '6h', True)
+        X = compute_rolling_skew(X, 'V', '6h', True)
+        X = compute_rolling_skew(X, 'Pdyn', '6h', True)
 
         X = compute_rolling_skew(X, 'Beta', '6h', False)
         X = compute_rolling_skew(X, 'B', '6h', False)
@@ -148,11 +148,11 @@ class FeatureExtractor(BaseEstimator):
         X = compute_rolling_skew(X, 'V', '6h', False)
         X = compute_rolling_skew(X, 'Pdyn', '6h', False)
 
-        # X = compute_rolling_skew(X, 'Beta', '3h', True)
-        # X = compute_rolling_skew(X, 'B', '3h', True)
-        # X = compute_rolling_skew(X, 'RmsBob', '3h', True)
-        # X = compute_rolling_skew(X, 'V', '3h', True)
-        # X = compute_rolling_skew(X, 'Pdyn', '3h', True)
+        X = compute_rolling_skew(X, 'Beta', '3h', True)
+        X = compute_rolling_skew(X, 'B', '3h', True)
+        X = compute_rolling_skew(X, 'RmsBob', '3h', True)
+        X = compute_rolling_skew(X, 'V', '3h', True)
+        X = compute_rolling_skew(X, 'Pdyn', '3h', True)
 
         X = compute_rolling_skew(X, 'Beta', '3h', False)
         X = compute_rolling_skew(X, 'B', '3h', False)
@@ -166,11 +166,11 @@ class FeatureExtractor(BaseEstimator):
         # X = compute_rolling_skew(X, 'V', '12h', True)
         # X = compute_rolling_skew(X, 'Pdyn', '12h', True)
 
-        X = compute_rolling_skew(X, 'Beta', '12h', False)
-        X = compute_rolling_skew(X, 'B', '12h', False)
-        X = compute_rolling_skew(X, 'RmsBob', '12h', False)
-        X = compute_rolling_skew(X, 'V', '12h', False)
-        X = compute_rolling_skew(X, 'Pdyn', '12h', False)
+        # X = compute_rolling_skew(X, 'Beta', '12h', False)
+        # X = compute_rolling_skew(X, 'B', '12h', False)
+        # X = compute_rolling_skew(X, 'RmsBob', '12h', False)
+        # X = compute_rolling_skew(X, 'V', '12h', False)
+        # X = compute_rolling_skew(X, 'Pdyn', '12h', False)
 
 
         # X = compute_rolling_mean(X, "Pdyn", "2h", True)
