@@ -28,31 +28,18 @@ def compute_rolling_median(X_df, feature, time_window, center=True):
     X_df[name] = X_df[name].astype(X_df[feature].dtype)
     return X_df
 
-def compute_rolling_min(X_df, feature, time_window, center=True):
-    name = "_".join([feature, time_window, "median", str(center)])
-    X_df[name] = X_df[feature].rolling(time_window, center=center).min()
+def compute_rolling_skew(X_df, feature, time_window, center=True):
+    name = "_".join([feature, time_window, "skew", str(center)])
+    X_df[name] = X_df[feature].rolling(time_window, center=center).skew()
     X_df[name] = X_df[name].ffill().bfill()
     X_df[name] = X_df[name].astype(X_df[feature].dtype)
     return X_df
-
-def compute_rolling_max(X_df, feature, time_window, center=True):
-    name = "_".join([feature, time_window, "median", str(center)])
-    X_df[name] = X_df[feature].rolling(time_window, center=center).max()
-    X_df[name] = X_df[name].ffill().bfill()
-    X_df[name] = X_df[name].astype(X_df[feature].dtype)
-    return X_df
-
-def compute_rolling_variables(X_df, feature, time_window):
+ 
+def compute_rolling_variables(X_df, feature, time_window, center=True):
     X_df = compute_rolling_mean(X_df, feature, time_window, True)
     X_df = compute_rolling_std(X_df, feature, time_window, True)
-    X_df = compute_rolling_median(X_df, feature, time_window, True)
-    X_df = compute_rolling_min(X_df, feature, time_window, True)
-    X_df = compute_rolling_max(X_df, feature, time_window, True)
     X_df = compute_rolling_mean(X_df, feature, time_window, False)
     X_df = compute_rolling_std(X_df, feature, time_window, False)
-    X_df = compute_rolling_median(X_df, feature, time_window, False)
-    X_df = compute_rolling_min(X_df, feature, time_window, False)
-    X_df = compute_rolling_max(X_df, feature, time_window, False)
     return X_df
  
 def compute_rolling_diff(X, feat, periods):
@@ -105,42 +92,122 @@ class FeatureExtractor(BaseEstimator):
         return self
  
     def transform(self, X):
-        X = clip_column(X, 'Beta', 0, 100)
-        X = clip_column(X, "B", 0, 100)
-        X = clip_column(X, "RmsBob", 0, 2)
-        X = clip_column(X, "Vth", 0, 350)
-        X = clip_column(X, "V", 0, 2000)
-        X = clip_column(X, "Vx", -1000, 1000)
+        X = clip_column(X, 'Beta', 0, 200)
+        X = clip_column(X, "B", 0, 500)
+        X = clip_column(X, "RmsBob", 0, 4)
+        X = clip_column(X, "Vth", 0, 250)
+        X = clip_column(X, "V", 0, 2500)
+        X = clip_column(X, "Vx", 0, 2000)
         X = clip_column(X, "Range F 13", 0, 10**9)
         X = clip_column(X, "Pdyn", 0, 5e-13)
-
+ 
         Cols = ["B", "Beta", "RmsBob", "V", "Vth", "Range F 13", "Pdyn"]
-
+ 
         X = X.drop(columns=[col for col in X if col not in Cols])
 
-        Cols = ["B", "Beta", "RmsBob", "V", "Pdyn"]
+        # X = compute_rolling_skew(X, 'Beta', '6h', True)
+        # X = compute_rolling_skew(X, 'B', '6h', True)
+        # X = compute_rolling_skew(X, 'RmsBob', '6h', True)
+        # X = compute_rolling_skew(X, 'V', '6h', True)
+        # X = compute_rolling_skew(X, 'Pdyn', '6h', True)
 
-        for col in Cols:
-            X = compute_rolling_variables(X, col, "2h")
-            X = compute_rolling_variables(X, col, "4h")
-            X = compute_rolling_variables(X, col, "8h")
-            X = compute_rolling_variables(X, col, "16h")
-            X = compute_rolling_variables(X, col, "32h")
-            X = X.copy()
+        # X = compute_rolling_skew(X, 'Beta', '6h', False)
+        # X = compute_rolling_skew(X, 'B', '6h', False)
+        # X = compute_rolling_skew(X, 'RmsBob', '6h', False)
+        # X = compute_rolling_skew(X, 'V', '6h', False)
+        # X = compute_rolling_skew(X, 'Pdyn', '6h', False)
 
+        # X = compute_rolling_skew(X, 'Beta', '3h', True)
+        # X = compute_rolling_skew(X, 'B', '3h', True)
+        # X = compute_rolling_skew(X, 'RmsBob', '3h', True)
+        # X = compute_rolling_skew(X, 'V', '3h', True)
+        # X = compute_rolling_skew(X, 'Pdyn', '3h', True)
+
+        # X = compute_rolling_skew(X, 'Beta', '3h', False)
+        # X = compute_rolling_skew(X, 'B', '3h', False)
+        # X = compute_rolling_skew(X, 'RmsBob', '3h', False)
+        # X = compute_rolling_skew(X, 'V', '3h', False)
+        # X = compute_rolling_skew(X, 'Pdyn', '3h', False)
+ 
+        X = compute_rolling_median(X, "Pdyn", "6h", True)
+        X = compute_rolling_median(X, "Pdyn", "12h", True)
+        X = compute_rolling_median(X, "Pdyn", "24h", True)
+ 
+ 
+        X = compute_rolling_mean(X, "B", "24h", True)
+ 
+        X = compute_rolling_std(X, "B", "24h", True)
+        X = compute_rolling_std(X, 'B', "48h", True)
+        X = compute_rolling_std(X, 'B', "72h", True)
+        X = compute_rolling_std(X, "B", "24h", False)
+        X = compute_rolling_std(X, 'B', "48h", False)
+        X = compute_rolling_std(X, 'B', "72h", False)
+ 
+        X = compute_rolling_median(X, "B", "12h", True)
+        X = compute_rolling_median(X, "B", "24h", True)
+        X = compute_rolling_median(X, "B", "12h", False)
+        X = compute_rolling_median(X, "B", "24h", False)
+ 
+ 
+ 
+        X = compute_rolling_mean(X, "RmsBob", "6h", True)
+        X = compute_rolling_mean(X, "RmsBob", "12h", True)
+        X = compute_rolling_mean(X, "RmsBob", "18h", True)
+        X = compute_rolling_mean(X, "RmsBob", "24h", True)
+        X = compute_rolling_mean(X, "RmsBob", "48h", True)
+        X = compute_rolling_mean(X, "RmsBob", "12h", False)
+        X = compute_rolling_mean(X, "RmsBob", "24h", False)
+ 
+ 
+        X = compute_rolling_median(X, "RmsBob", "24h", True)
+        X = compute_rolling_median(X, "RmsBob", "24h", False)
+        X = compute_rolling_median(X, "RmsBob", "12h", True)
+        X = compute_rolling_median(X, "RmsBob", "12h", False)
+ 
+ 
+ 
+        X = compute_rolling_mean(X, "Beta", "2h", True)
+        X = compute_rolling_mean(X, "Beta", "1h", True)
+        X = compute_rolling_mean(X, "Beta", "12h", True)
+        X = compute_rolling_mean(X, "Beta", "12h", False)
+        X = compute_rolling_mean(X, "Beta", "6h", True)
+        X = compute_rolling_mean(X, "Beta", "6h", False)
+        X = compute_rolling_mean(X, "Beta", "24h", True)
+        X = compute_rolling_mean(X, "Beta", "24h", False)
+        X = compute_rolling_mean(X, "Beta", "3h", True)
+        X = compute_rolling_mean(X, "Beta", "4h", True)
+        X = compute_rolling_mean(X, "Beta", "5h", True)
+ 
+        X = compute_rolling_median(X, "Beta", "24h", True)
+        X = compute_rolling_median(X, "Beta", "24h", False)
+        X = compute_rolling_median(X, "Beta", "12h", True)
+        X = compute_rolling_median(X, "Beta", "12h", False)
+ 
+ 
+ 
+        X = compute_rolling_diff(X, 'B_12h_median_True', 48)
+        X = compute_rolling_diff(X, 'Beta_12h_median_True', 48)
+        X = compute_rolling_diff(X, 'RmsBob_12h_median_True', 48)
+        X = compute_rolling_diff(X, 'B_12h_median_True', 96)
+        X = compute_rolling_diff(X, 'Beta_12h_median_True', 96)
+        X = compute_rolling_diff(X, 'RmsBob_12h_median_True', 96)
+        X = compute_rolling_diff(X, 'B_12h_median_True', 192)
+        X = compute_rolling_diff(X, 'Beta_12h_median_True', 192)
+        X = compute_rolling_diff(X, 'RmsBob_12h_median_True', 192)
+ 
         return X
     
 class CustomClf(BaseEstimator):
     def __init__(self):
         self._estimator_type = "classifier"
         self.estimator = LGBMClassifier(objective='binary',
-                                num_leaves=15,
+                                num_leaves=20,
                                 min_split_gain=0.,
-                                max_depth=20,
+                                max_depth=15,
                                 learning_rate=0.02,
-                                n_estimators=400,
+                                n_estimators=500,
                                 class_weight={0:1, 1:1.8},
-                                reg_lambda=0.5,
+                                reg_lambda=1,
                                 )
         
  
@@ -168,9 +235,11 @@ def get_estimator():
  
     feature_extractor = FeatureExtractor()
     classifier = CustomClf()
+    scaler = StandardScaler()
     
  
     pipe = make_pipeline(
         feature_extractor,
+        scaler,
         classifier)
     return pipe

@@ -6,6 +6,7 @@ import pandas as pd
 from lightgbm import LGBMClassifier
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
 from sklearn.ensemble import GradientBoostingClassifier, VotingClassifier, RandomForestClassifier
+from sklearn.svm import SVC, LinearSVC
 import numpy as np
  
  
@@ -326,11 +327,12 @@ class CustomClf(BaseEstimator):
                                 n_estimators=500,
                                 class_weight={0:1, 1:1.8},
                                 reg_lambda=0.5,
-                                ))
+                                )),
+            ('LDA', LinearSVC())
             ],
             voting='soft',
             n_jobs=-1,
-            weights=[1,3]
+            weights=[1,3, 1]
         )
         
  

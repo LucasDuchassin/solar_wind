@@ -29,21 +29,21 @@ def compute_rolling_median(X_df, feature, time_window, center=True):
     return X_df
 
 def compute_rolling_min(X_df, feature, time_window, center=True):
-    name = "_".join([feature, time_window, "median", str(center)])
+    name = "_".join([feature, time_window, "min", str(center)])
     X_df[name] = X_df[feature].rolling(time_window, center=center).min()
     X_df[name] = X_df[name].ffill().bfill()
     X_df[name] = X_df[name].astype(X_df[feature].dtype)
     return X_df
 
 def compute_rolling_max(X_df, feature, time_window, center=True):
-    name = "_".join([feature, time_window, "median", str(center)])
+    name = "_".join([feature, time_window, "max", str(center)])
     X_df[name] = X_df[feature].rolling(time_window, center=center).max()
     X_df[name] = X_df[name].ffill().bfill()
     X_df[name] = X_df[name].astype(X_df[feature].dtype)
     return X_df
 
 def compute_rolling_skew(X_df, feature, time_window, center=True):
-    name = "_".join([feature, time_window, "median", str(center)])
+    name = "_".join([feature, time_window, "skew", str(center)])
     X_df[name] = X_df[feature].rolling(time_window, center=center).skew()
     X_df[name] = X_df[name].ffill().bfill()
     X_df[name] = X_df[name].astype(X_df[feature].dtype)
@@ -112,53 +112,53 @@ class FeatureExtractor(BaseEstimator):
 
         X = X.drop(columns=[col for col in X if col not in Cols])
 
-        X = compute_rolling_min(X, 'Beta', '6h', True)
-        X = compute_rolling_min(X, 'B', '6h', True)
-        X = compute_rolling_min(X, 'RmsBob', '6h', True)
-        X = compute_rolling_min(X, 'V', '6h', True)
-        X = compute_rolling_min(X, 'Pdyn', '6h', True)
+        # X = compute_rolling_min(X, 'Beta', '6h', True)
+        # X = compute_rolling_min(X, 'B', '6h', True)
+        # X = compute_rolling_min(X, 'RmsBob', '6h', True)
+        # X = compute_rolling_min(X, 'V', '6h', True)
+        # X = compute_rolling_min(X, 'Pdyn', '6h', True)
 
-        X = compute_rolling_min(X, 'Beta', '6h', False)
-        X = compute_rolling_min(X, 'B', '6h', False)
-        X = compute_rolling_min(X, 'RmsBob', '6h', False)
-        X = compute_rolling_min(X, 'V', '6h', False)
-        X = compute_rolling_min(X, 'Pdyn', '6h', False)
+        # X = compute_rolling_min(X, 'Beta', '6h', False)
+        # X = compute_rolling_min(X, 'B', '6h', False)
+        # X = compute_rolling_min(X, 'RmsBob', '6h', False)
+        # X = compute_rolling_min(X, 'V', '6h', False)
+        # X = compute_rolling_min(X, 'Pdyn', '6h', False)
 
-        X = compute_rolling_max(X, 'Beta', '6h', True)
-        X = compute_rolling_max(X, 'B', '6h', True)
-        X = compute_rolling_max(X, 'RmsBob', '6h', True)
-        X = compute_rolling_max(X, 'V', '6h', True)
-        X = compute_rolling_max(X, 'Pdyn', '6h', True)
+        # X = compute_rolling_max(X, 'Beta', '6h', True)
+        # X = compute_rolling_max(X, 'B', '6h', True)
+        # X = compute_rolling_max(X, 'RmsBob', '6h', True)
+        # X = compute_rolling_max(X, 'V', '6h', True)
+        # X = compute_rolling_max(X, 'Pdyn', '6h', True)
 
-        X = compute_rolling_max(X, 'Beta', '6h', False)
-        X = compute_rolling_max(X, 'B', '6h', False)
-        X = compute_rolling_max(X, 'RmsBob', '6h', False)
-        X = compute_rolling_max(X, 'V', '6h', False)
-        X = compute_rolling_max(X, 'Pdyn', '6h', False)
+        # X = compute_rolling_max(X, 'Beta', '6h', False)
+        # X = compute_rolling_max(X, 'B', '6h', False)
+        # X = compute_rolling_max(X, 'RmsBob', '6h', False)
+        # X = compute_rolling_max(X, 'V', '6h', False)
+        # X = compute_rolling_max(X, 'Pdyn', '6h', False)
 
         X = compute_rolling_skew(X, 'Beta', '6h', True)
         X = compute_rolling_skew(X, 'B', '6h', True)
         X = compute_rolling_skew(X, 'RmsBob', '6h', True)
-        X = compute_rolling_skew(X, 'V', '6h', True)
-        X = compute_rolling_skew(X, 'Pdyn', '6h', True)
+        # X = compute_rolling_skew(X, 'V', '6h', True)
+        # X = compute_rolling_skew(X, 'Pdyn', '6h', True)
 
-        X = compute_rolling_skew(X, 'Beta', '6h', False)
-        X = compute_rolling_skew(X, 'B', '6h', False)
-        X = compute_rolling_skew(X, 'RmsBob', '6h', False)
-        X = compute_rolling_skew(X, 'V', '6h', False)
-        X = compute_rolling_skew(X, 'Pdyn', '6h', False)
+        # X = compute_rolling_skew(X, 'Beta', '6h', False)
+        # X = compute_rolling_skew(X, 'B', '6h', False)
+        # X = compute_rolling_skew(X, 'RmsBob', '6h', False)
+        # X = compute_rolling_skew(X, 'V', '6h', False)
+        # X = compute_rolling_skew(X, 'Pdyn', '6h', False)
 
-        X = compute_rolling_skew(X, 'Beta', '3h', True)
-        X = compute_rolling_skew(X, 'B', '3h', True)
-        X = compute_rolling_skew(X, 'RmsBob', '3h', True)
-        X = compute_rolling_skew(X, 'V', '3h', True)
-        X = compute_rolling_skew(X, 'Pdyn', '3h', True)
+        # X = compute_rolling_skew(X, 'Beta', '3h', True)
+        # X = compute_rolling_skew(X, 'B', '3h', True)
+        # X = compute_rolling_skew(X, 'RmsBob', '3h', True)
+        # X = compute_rolling_skew(X, 'V', '3h', True)
+        # X = compute_rolling_skew(X, 'Pdyn', '3h', True)
 
-        X = compute_rolling_skew(X, 'Beta', '3h', False)
-        X = compute_rolling_skew(X, 'B', '3h', False)
-        X = compute_rolling_skew(X, 'RmsBob', '3h', False)
-        X = compute_rolling_skew(X, 'V', '3h', False)
-        X = compute_rolling_skew(X, 'Pdyn', '3h', False)
+        # X = compute_rolling_skew(X, 'Beta', '3h', False)
+        # X = compute_rolling_skew(X, 'B', '3h', False)
+        # X = compute_rolling_skew(X, 'RmsBob', '3h', False)
+        # X = compute_rolling_skew(X, 'V', '3h', False)
+        # X = compute_rolling_skew(X, 'Pdyn', '3h', False)
 
         # X = compute_rolling_skew(X, 'Beta', '12h', True)
         # X = compute_rolling_skew(X, 'B', '12h', True)
@@ -171,6 +171,16 @@ class FeatureExtractor(BaseEstimator):
         # X = compute_rolling_skew(X, 'RmsBob', '12h', False)
         # X = compute_rolling_skew(X, 'V', '12h', False)
         # X = compute_rolling_skew(X, 'Pdyn', '12h', False)
+
+        # X = compute_rolling_mean(X, 'Beta', '30min', True)
+        # X = compute_rolling_mean(X, 'B', '30min', True)
+        # X = compute_rolling_mean(X, 'RmsBob', '30min', True)
+        # X = compute_rolling_mean(X, 'V', '30min', True)
+        # X = compute_rolling_mean(X, 'Vth', '30min', True)
+        # X = compute_rolling_mean(X, 'Pdyn', '30min', True)
+
+
+        X = X.copy()
 
 
         # X = compute_rolling_mean(X, "Pdyn", "2h", True)
@@ -200,16 +210,16 @@ class FeatureExtractor(BaseEstimator):
 
         X = compute_rolling_mean(X, "B", "24h", True)
  
-        #X = compute_rolling_std(X, "B", "12h", True)
+        X = compute_rolling_std(X, "B", "12h", True)
         X = compute_rolling_std(X, "B", "24h", True)
         X = compute_rolling_std(X, 'B', "48h", True)
         X = compute_rolling_std(X, 'B', "72h", True)
-        #X = compute_rolling_std(X, 'B', "96h", True)
-        #X = compute_rolling_std(X, "B", "12h", False)
+        X = compute_rolling_std(X, 'B', "96h", True)
+        X = compute_rolling_std(X, "B", "12h", False)
         X = compute_rolling_std(X, "B", "24h", False)
         X = compute_rolling_std(X, 'B', "48h", False)
         X = compute_rolling_std(X, 'B', "72h", False)
-        #X = compute_rolling_std(X, 'B', "96h", False)
+        X = compute_rolling_std(X, 'B', "96h", False)
 
         X = compute_rolling_median(X, "B", "12h", True)
         X = compute_rolling_median(X, "B", "24h", True)
@@ -218,7 +228,7 @@ class FeatureExtractor(BaseEstimator):
 
 
 
-        #X = compute_rolling_mean(X, "RmsBob", "3h", True)
+        X = compute_rolling_mean(X, "RmsBob", "3h", True)
         X = compute_rolling_mean(X, "RmsBob", "6h", True)
         X = compute_rolling_mean(X, "RmsBob", "12h", True)
         X = compute_rolling_mean(X, "RmsBob", "18h", True)
@@ -227,10 +237,10 @@ class FeatureExtractor(BaseEstimator):
         X = compute_rolling_mean(X, "RmsBob", "12h", False)
         X = compute_rolling_mean(X, "RmsBob", "24h", False)
 
-        # X = compute_rolling_diff(X, 'RmsBob_6h_mean_True', 36)
-        # X = compute_rolling_diff(X, 'RmsBob_6h_mean_True', 72)
-        # X = compute_rolling_diff(X, 'RmsBob_6h_mean_True', 108)
-        # X = compute_rolling_diff(X, 'RmsBob_6h_mean_True', 144)
+        X = compute_rolling_diff(X, 'RmsBob_6h_mean_True', 36)
+        X = compute_rolling_diff(X, 'RmsBob_6h_mean_True', 72)
+        X = compute_rolling_diff(X, 'RmsBob_6h_mean_True', 108)
+        X = compute_rolling_diff(X, 'RmsBob_6h_mean_True', 144)
 
         X = compute_rolling_median(X, "RmsBob", "24h", True)
         X = compute_rolling_median(X, "RmsBob", "24h", False)
@@ -255,6 +265,8 @@ class FeatureExtractor(BaseEstimator):
         X = compute_rolling_median(X, "Beta", "24h", False)
         X = compute_rolling_median(X, "Beta", "12h", True)
         X = compute_rolling_median(X, "Beta", "12h", False)
+
+        X = X.copy()
 
 
 
@@ -287,7 +299,20 @@ class FeatureExtractor(BaseEstimator):
         # X = compute_rolling_diff(X, 'Beta_1h_mean_True', 6)
         # X = compute_rolling_diff(X, 'Beta_1h_mean_True', -6)
 
-        # X = compute_rolling_mean(X, "B", "1h", True)
+        X = compute_rolling_diff(X, 'Beta_1h_mean_True', 6)
+        X = compute_rolling_diff(X, 'Beta_1h_mean_True', 12)
+        X = compute_rolling_diff(X, 'Beta_1h_mean_True', 18)
+        X = compute_rolling_diff(X, 'Beta_1h_mean_True', 24)
+        X = compute_rolling_diff(X, 'Beta_1h_mean_True', 30)
+        X = compute_rolling_diff(X, 'Beta_1h_mean_True', 36)
+
+        X = compute_rolling_mean(X, "B", "1h", True)
+        X = compute_rolling_diff(X, 'B_1h_mean_True', 6)
+        X = compute_rolling_diff(X, 'B_1h_mean_True', 12)
+        X = compute_rolling_diff(X, 'B_1h_mean_True', 18)
+        X = compute_rolling_diff(X, 'B_1h_mean_True', 24)
+        X = compute_rolling_diff(X, 'B_1h_mean_True', 30)
+        X = compute_rolling_diff(X, 'B_1h_mean_True', 36)
         # X = compute_rolling_diff(X, 'B_1h_mean_True', 24)
         # X = compute_rolling_diff(X, 'B_1h_mean_True', -24)
         # X = compute_rolling_diff(X, 'B_1h_mean_True', 48)
@@ -301,7 +326,13 @@ class FeatureExtractor(BaseEstimator):
         # X = compute_rolling_diff(X, 'B_1h_mean_True', 6)
         # X = compute_rolling_diff(X, 'B_1h_mean_True', -6)
 
-        # X = compute_rolling_mean(X, "RmsBob", "1h", True)
+        X = compute_rolling_mean(X, "RmsBob", "1h", True)
+        X = compute_rolling_diff(X, 'RmsBob_1h_mean_True', 6)
+        X = compute_rolling_diff(X, 'RmsBob_1h_mean_True', 12)
+        X = compute_rolling_diff(X, 'RmsBob_1h_mean_True', 18)
+        X = compute_rolling_diff(X, 'RmsBob_1h_mean_True', 24)
+        X = compute_rolling_diff(X, 'RmsBob_1h_mean_True', 30)
+        X = compute_rolling_diff(X, 'RmsBob_1h_mean_True', 36)
         # X = compute_rolling_diff(X, 'RmsBob_1h_mean_True', 24)
         # X = compute_rolling_diff(X, 'RmsBob_1h_mean_True', -24)
         # X = compute_rolling_diff(X, 'RmsBob_1h_mean_True', 48)
@@ -373,9 +404,11 @@ def get_estimator():
  
     feature_extractor = FeatureExtractor()
     classifier = CustomClf()
+    scaler = StandardScaler()
     
  
     pipe = make_pipeline(
         feature_extractor,
+        scaler,
         classifier)
     return pipe
